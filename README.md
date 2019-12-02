@@ -29,7 +29,7 @@ $: npm install eslint-config-standard eslint-friendly-formatter eslint-plugin-im
 
 > 可以根据自身团队的习惯，指定规则，下面只是一种参考
 
-```json
+```
 module.exports = {
   root: true,
   parserOptions: {
