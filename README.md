@@ -5,7 +5,7 @@
 
 ## 演示
 
-> 下面是一张自适应效果git图，比较大，需要耐心等待才能看到
+> 下面是一张自适应效果git图，比较大，需要耐心等待才能看到，或者直接下载图片查看效果[https://i.loli.net/2019/12/03/oONsfGkgit7H3Cw.gif]
 
 ![show.gif](https://i.loli.net/2019/12/03/oONsfGkgit7H3Cw.gif)
 
