@@ -5,7 +5,48 @@
 
 ## 演示
 
+> 下面是一张自适应效果git图，比较大，需要耐心等待才能看到
+
 ![show.gif](https://i.loli.net/2019/12/03/oONsfGkgit7H3Cw.gif)
+
+#### 工程目录
+
+```
+.
+├── README.md
+├── babel.config.js
+├── package-lock.json
+├── package.json
+├── public
+│   └── index.html
+├── src
+│   ├── App.vue
+│   ├── api
+│   │   └── homeApi.js
+│   ├── assets
+│   │   ├── img
+│   │   │   └── head.png
+│   │   └── scss
+│   │       └── global.scss
+│   ├── components
+│   │   └── Footer.vue
+│   ├── main.js
+│   ├── page
+│   │   └── Home.vue
+│   ├── router
+│   │   └── index.js
+│   ├── store
+│   │   ├── actions.js
+│   │   ├── getters.js
+│   │   ├── index.js
+│   │   ├── modules
+│   │   │   └── home.js
+│   │   └── mutations.js
+│   └── utils
+│       ├── http.js
+│       └── tool.js
+└── vue.config.js
+```
 
 ## 基础项目创建
 
