@@ -13,7 +13,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    globalFlag: 0
+    copyright: 'Power By Gavin'
   },
   actions,
   mutations,

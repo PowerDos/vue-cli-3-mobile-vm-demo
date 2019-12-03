@@ -1,12 +1,12 @@
 <template>
-  <div class="sub-title-container">
-    <h1>{{ msg }}</h1>
+  <div class="footer-container">
+    <p>{{ msg }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SubTitle',
+  name: 'Footer',
   props: {
     msg: String
   }
@@ -14,10 +14,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sub-title-container {
-  h1 {
+.footer-container {
+  p {
+    margin-top: 38px;
+    margin-bottom: 15px;
     text-align: center;
     font-size: 15px;
+    color: #ccc;
   }
 }
 </style>

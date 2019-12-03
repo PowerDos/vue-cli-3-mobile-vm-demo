@@ -1,7 +1,11 @@
 # 基于Vue-Cli3的Vue移动端企业级工程架构
-> 本项目是基于Vue-Cli3脚手架，应用VW的自适应解决方案构建的企业级工程项目，下面会一步步构建起项目结构。
+> 本项目是基于Vue-Cli3脚手架，应用VW的自适应解决方案构建的移动端企业级工程项目，下面会一步步构建起项目结构。大家也可以先下载源代码下来看下，再跟着操作。
 
 > Author: Gavin
+
+## 演示
+
+![show.gif](https://i.loli.net/2019/12/03/oONsfGkgit7H3Cw.gif)
 
 ## 基础项目创建
 
@@ -115,27 +119,34 @@ module.exports = {
 $: npm i postcss-aspect-ratio-mini postcss-px-to-viewport postcss-write-svg postcss-cssnext postcss-viewport-units postcss-import postcss-cssnext cssnano cssnano-preset-advanced postcss-import postcss-url --save-dev
 ```
 
-> 配置规则，修改package.json
+> 配置规则，修改vue.config.js
 
 ```
-{
+module.exports = {
 ...
-	"postcss": {
-    "plugins": {
-      "autoprefixer": {},
-      "postcss-px-to-viewport": {
-        "viewportWidth": 750,
-        "viewportHeight": 1334,
-        "unitPrecision": 3,
-        "viewportUnit": "vw",
-        "selectorBlackList": [".ignore", ".hairlines"], // 这里是过滤不转换的css，支持正则，如果框架本身把单位写死支持移动端，可以通过这个过滤掉，比如vux UI框架需要过滤掉['.ignore', '.hairlines', /^\.weui/, /^\.dp/, /^\.scroller/, /^\.ignore/],
-        "minPixelValue": 1,
-        "mediaQuery": false
+  css: {
+    loaderOptions: {
+      sass: {
+        // 根据自己样式文件的位置调整
+        prependData: '@import "@/assets/scss/global.scss";'
+      },
+      postcss: {
+        plugins: [
+          require('postcss-px-to-viewport')({
+            viewportWidth: 750,
+            viewportHeight: 1334,
+            unitPrecision: 3,
+            viewportUnit: 'vw',
+            "selectorBlackList": [".ignore", ".hairlines"], // 这里是过滤不转换的css，支持正则，如果框架本身把单位写死支持移动端，可以通过这个过滤掉，比如vux UI框架需要过滤掉['.ignore', '.hairlines', /^\.weui/, /^\.dp/, /^\.scroller/, /^\.ignore/],
+            minPixelValue: 1,
+            mediaQuery: false
+          })
+        ]
       }
     }
-  },
+  }
 ...
-}
+};
 ```
 
 ## 工程目录搭建
@@ -290,9 +301,200 @@ export default new Vuex.Store({
 
 > 这里以引入Vant UI为例
 
+#### 安装vant
 
+```shell
+$: npm install vant --save 
+```
+
+#### 按需引入
+
+> 安装按需加载依赖，[babel-plugin-import](https://github.com/ant-design/babel-plugin-import) 是一款 babel 插件，它会在编译过程中将 import 的写法自动转换为按需引入的方式
+
+```shell
+$: npm install babel-plugin-import --save-dev
+```
+
+> 配置babel，修改根目录下的babel.config.js
+
+```
+module.exports = {
+  presets: [
+    '@vue/app'
+  ],
+  plugins: [
+    [
+      'import',
+      {
+        libraryName: 'vant',
+        libraryDirectory: 'es',
+        style: true
+      },
+      'vant'
+    ]
+  ]
+};
+```
+
+#### 过滤px单位转换成VM
+
+> 由于Vant UI本身就自带了自适应，所以无需转换为vw单位，我们可以再postcss上过滤掉，修改根目录的vue.config.js文件
+
+```
+module.exports = {
+  css: {
+    loaderOptions: {
+      sass: {
+        // 根据自己样式文件的位置调整
+        prependData: '@import "@/assets/scss/global.scss";'
+      },
+      postcss: {
+        plugins: [
+          require('postcss-px-to-viewport')({
+            viewportWidth: 750,
+            viewportHeight: 1334,
+            unitPrecision: 3,
+            viewportUnit: 'vw',
+            selectorBlackList: ['.ignore', '.hairlines', /^\.dp/, /^\.scroller/, /^\.van/], // 这里是过滤不转换的css，支持正则，如果框架本身把单位写死支持移动端，可以通过这个过滤掉
+            minPixelValue: 1,
+            mediaQuery: false
+          })
+        ]
+      }
+    }
+  }
+};
+```
+
+#### demo
+
+```
+<template>
+  <div class="home-container">
+    <!-- 导航 -->
+    <van-nav-bar :title="title" left-text="返回" left-arrow>
+      <van-icon name="shopping-cart-o" slot="right" info="9" size="20px"/>
+    </van-nav-bar>
+    <!-- 通知栏 -->
+    <van-notice-bar :text="notify" left-icon="volume-o" />
+    <!-- 轮播图 -->
+    <van-swipe :autoplay="3000" indicator-color="white" class="swipe-container">
+      <van-swipe-item class="swipe-box swipe-color-1">1</van-swipe-item>
+      <van-swipe-item class="swipe-box swipe-color-2">2</van-swipe-item>
+      <van-swipe-item class="swipe-box swipe-color-3">3</van-swipe-item>
+      <van-swipe-item class="swipe-box swipe-color-4">4</van-swipe-item>
+    </van-swipe>
+    <!-- 菜单 -->
+    <van-grid :column-num="3">
+      <van-grid-item icon="like-o" text="收藏" />
+      <van-grid-item icon="clock-o" text="历史订单" />
+      <van-grid-item icon="balance-o" text="资金管理" />
+      <van-grid-item icon="setting-o" text="设置" />
+      <van-grid-item icon="location-o" text="收货地址" />
+      <van-grid-item icon="service-o" text="服务中心" />
+    </van-grid>
+    <!-- 懒加载 -->
+    <van-skeleton title avatar :row="3" class="skeleton-box"/>
+    <van-skeleton title avatar :row="3" class="skeleton-box"/>
+    <van-skeleton title avatar :row="3" class="skeleton-box"/>
+    <!-- 底部 -->
+    <Footer :msg="copyright"></Footer>
+  </div>
+</template>
+
+<script>
+import { Icon, NavBar, NoticeBar, Grid, GridItem, Swipe, SwipeItem, Skeleton } from 'vant';
+import Footer from '@/components/Footer';
+import { mapState } from 'vuex';
+export default {
+  name: 'Home',
+  components: {
+    Footer,
+    [Icon.name]: Icon,
+    [NavBar.name]: NavBar,
+    [NoticeBar.name]: NoticeBar,
+    [Grid.name]: Grid,
+    [GridItem.name]: GridItem,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+    [Skeleton.name]: Skeleton
+  },
+  data () {
+    return {
+      title: 'Vue 企业级工程架构',
+      notify: '本项目是基于Vue-Cli3脚手架，应用VW的自适应解决方案构建的移动端企业级工程项目，下面会一步步构建起项目结构，方便大家了解整个过程。'
+    };
+  },
+  computed: {
+    ...mapState(['copyright'])
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.home-container {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #fff;
+  .swipe-container {
+    height: 380px;
+    .swipe-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-size: 58px;
+      color: #fff;
+    }
+    .swipe-color-1 {
+      background-color: #845EC2;
+    }
+    .swipe-color-2 {
+      background-color: #FFC75F;
+    }
+    .swipe-color-3 {
+      background-color: #008E9B;
+    }
+    .swipe-color-4 {
+      background-color: #4D8076;
+    }
+  }
+  .skeleton-box {
+    margin-top: 15px;
+  }
+}
+</style>
+```
+
+#### 效果
+
+![image.png](https://i.loli.net/2019/12/03/Ky4SMFHxEUYRQPj.png)
 
 ## 开发配置
+
+> 由于大部分情况下，我们都是在本地开发，请求后端服务，所以我们这里可以直接在vue.config.js中配置测试服器地址或本地服务地址，这样我们就可以直接在本地测试服务端的功能，并且解决跨域问题
+
+> 配置根目录下的vue.config.js
+
+```
+module.exports = {
+...
+  devServer: {
+    proxy: {
+      '/api': { // 需要转发的接口，如果全转发就设置根就行/
+        target: 'http://xxxx:8080/', // 对应自己的接口
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+  },
+...
+};
+```
 
 
 
